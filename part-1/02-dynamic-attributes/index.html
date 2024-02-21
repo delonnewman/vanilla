@@ -1,0 +1,33 @@
+<script>
+    class NamedImage extends HTMLElement {
+        constructor() {
+            super();
+
+            this.attachShadow({ mode: 'open' });
+            const template = document.getElementById('named-image-template');
+            this.shadowRoot.appendChild(template.content.cloneNode(true));
+        }
+
+        connectedCallback() {
+            this.setTemplateValues('src', this.getAttribute('src'));
+        }
+
+        setTemplateValues(name, value) {
+            this.shadowRoot.querySelectorAll(`#${name}`).forEach((element) => {
+                element.innerText = value
+            });
+        }
+
+        attributeChangedCallback(name, _, newValue) {
+            this.setTemplateValues(name, newValue);
+        }
+    }
+
+    customElements.define('hello-world', HelloWorld);
+</script>
+
+<template id="named-image-template">
+    <img ${src} alt="${name} dances." />
+</template>
+
+<hello-world name="Vanilla"></hello-world>

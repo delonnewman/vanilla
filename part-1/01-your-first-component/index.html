@@ -1,0 +1,37 @@
+<script>
+    class HelloWorld extends HTMLElement {
+        static get observedAttributes() {
+            return ['name'];
+        }
+
+        constructor() {
+            super();
+
+            this.attachShadow({ mode: 'open' });
+            const template = document.getElementById('hello-world-template');
+            this.shadowRoot.appendChild(template.content.cloneNode(true));
+        }
+
+        connectedCallback() {
+            this.setTemplateValues('name', this.getAttribute('name') ?? 'World');
+        }
+
+        setTemplateValues(name, value) {
+            this.shadowRoot.querySelectorAll(`#${name}`).forEach((element) => {
+                element.innerText = value
+            });
+        }
+
+        attributeChangedCallback(name, _, newValue) {
+            this.setTemplateValues(name, newValue);
+        }
+    }
+
+    customElements.define('hello-world', HelloWorld);
+</script>
+
+<template id="hello-world-template">
+    <h1>Hello <var id="name"></var></h1>
+</template>
+
+<hello-world name="Vanilla"></hello-world>
